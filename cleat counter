@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soccer Cleat Counter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      background: url('https://cdn.glitch.global/f246e6dd-1d39-4988-bef2-f423a6d3a8db/ChatGPT%20Image%20Jul%201%2C%202025%2C%2010_32_07%20AM.png?v=1751391141783') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffb6c1;
+      text-align: center;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-top: 1em;
+      position: relative;
+      z-index: 2;
+    }
+
+    #counterContainer {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 100px;
+      z-index: 2;
+    }
+
+    #counter {
+      font-size: 4em;
+      font-weight: bold;
+      color: #ffb6c1;
+      transform: translateX(-100px);
+    }
+
+    #decimalCounter {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #ffb6c1;
+      transform: translateX(100px);
+    }
+
+    #playersImage {
+      position: absolute;
+      bottom: 5%;
+      left: 30%;
+      width: 300px;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .animatePlayers {
+      animation: smoothCurve 6s ease-in-out forwards;
+      opacity: 1;
+    }
+
+    @keyframes smoothCurve {
+      0% { transform: translate(0, 0); opacity: 1; }
+      20% { transform: translate(100px, -30px); }
+      40% { transform: translate(250px, -60px); }
+      60% { transform: translate(400px, -30px); }
+      80% { transform: translate(600px, 0px); }
+      100% { transform: translate(900px, 100px); opacity: 0; }
+    }
+
+    .cleat {
+      position: fixed;
+      width: 60px;
+      height: auto;
+      top: -80px;
+      pointer-events: none;
+      animation: fall 3s linear forwards;
+      z-index: 2;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-80px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(120vh);
+        opacity: 0.8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Soccer Cleats Collected</h1>
+  <div id="counterContainer">
+    <div id="counter">0</div>
+    <div id="decimalCounter"></div>
+  </div>
+  <img id="playersImage" src="https://cdn.glitch.global/f246e6dd-1d39-4988-bef2-f423a6d3a8db/soccer-players-running-after-ball-260nw-1017871939-removebg-preview.png?v=1751391324586" alt="Soccer Players">
+
+  <script>
+    const cleatImageUrl = "https://cdn.glitch.global/f246e6dd-1d39-4988-bef2-f423a6d3a8db/football-shoes-soccer-boots-vector-600nw-269613527-removebg-preview.png?v=1751388251554";
+
+    function calculateCleatsDecimal() {
+      const startDate = new Date("2024-06-18T00:00:00Z");
+      const now = new Date();
+      const timeDiff = now.getTime() - startDate.getTime();
+      const totalSeconds = timeDiff / 1000;
+      const growthRate = Math.log(10) / (4 * 30.44 * 24 * 60 * 60);
+      return 1 * Math.exp(growthRate * totalSeconds);
+    }
+
+    function updateCounter() {
+      const countDecimal = calculateCleatsDecimal();
+      const countWhole = Math.floor(countDecimal);
+      document.getElementById("counter").textContent = countWhole.toLocaleString();
+      document.getElementById("decimalCounter").textContent = `(${countDecimal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} pairs)`;
+    }
+
+    function createFallingCleat() {
+      for (let i = 0; i < 10; i++) {
+        const cleat = document.createElement("img");
+        cleat.className = "cleat";
+        cleat.src = cleatImageUrl;
+        cleat.style.left = Math.random() * window.innerWidth + "px";
+        document.body.appendChild(cleat);
+        setTimeout(() => cleat.remove(), 5000);
+      }
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    let cleatInterval;
+    setTimeout(() => {
+      cleatInterval = setInterval(createFallingCleat, 100);
+    }, 2000);
+
+    setTimeout(() => {
+      clearInterval(cleatInterval);
+    }, 6000);
+
+    setTimeout(() => {
+      document.getElementById("playersImage").classList.add("animatePlayers");
+    }, 6000);
+  </script>
+</body>
+</html>
